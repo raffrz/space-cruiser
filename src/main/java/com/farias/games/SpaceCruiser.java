@@ -17,7 +17,7 @@ import org.lwjgl.glfw.GLFW;
 
 class Main {
     public static void main(String[] args) {
-        Window window = new Window(1280, 960);
+        Window window = new Window(640, 480);
         long windowId = window.create();
         SpaceCruiser game = new SpaceCruiser("Space Cruiser", window);
         game.addSystem(new InputSystem(game, windowId));
@@ -28,11 +28,8 @@ class Main {
 }
 
 public class SpaceCruiser extends Game {
-
     Player player;
-
     Sprite enemy_spr;
-    
     float lastShot;
     float fireRate = 1f / 60f * 10;
     Set<Bullet> bullets = new HashSet<>(); 
@@ -45,17 +42,14 @@ public class SpaceCruiser extends Game {
     public void onUserCreate() {
         orthographicMode(640, 480);
         player = new Player();
-        enemy_spr = createSprite("resources/enemy/enemy_01.png", 0, 128, 128);
+        enemy_spr = createSprite("resources/spaceships/enemy/enemy_01.png", 0, 128, 128);
     }
 
     @Override
     public void onUserUpdate(float deltaTime) {
         player.moving = false;
-
         checkInput();
-
         player.update(deltaTime);
-
         resolveGameState(deltaTime);
     }
 
@@ -116,12 +110,11 @@ public class SpaceCruiser extends Game {
 
     @Override
     public void onGfxUpdate(float deltaTime) {
-        drawSprite(player.sprite, player.animation.currentFrame, 128, 128, (int) player.position.x, (int) player.position.y,
+        drawSprite(player.sprite, player.animation.currentFrame, 64, 64, (int) player.position.x, (int) player.position.y,
          (int) player.scale.x, (int) player.scale.y);
         for (Bullet bullet : bullets) {
             drawSprite(bullet.sprite, bullet.animation, 128, 128, (int) bullet.position.x, (int) bullet.position.y, (int) bullet.scale.x, (int) bullet.scale.y);
         }
         drawText("current sprite: " + player.animation.currentFrame, 340, -10, 8, 8);
-    }
-    
+    }    
 }

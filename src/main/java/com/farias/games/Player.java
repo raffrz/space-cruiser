@@ -31,7 +31,7 @@ public class Player {
         this.scale = new Vector2f(64f, 64f);
         this.position = new Vector2f(320 - scale.x/2, -460 + scale.y/2);
         this.velocity = new Vector2f();
-        this.sprite = createSprite("resources/enemy/enemy_01.png", 0, 128, 128);
+        this.sprite = createSprite("resources/spaceships/enemy/enemy_02-02.png", 0, 64, 64);
         this.animation = Animation.PLAYER_ANIMATION;
     }
 
