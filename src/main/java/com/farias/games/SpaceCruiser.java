@@ -7,7 +7,6 @@ import java.util.Set;
 
 import com.farias.rengine.Game;
 import com.farias.rengine.GameEngine;
-import com.farias.rengine.GameEngine.Sprite;
 import com.farias.rengine.io.InputSystem;
 import com.farias.rengine.io.Window;
 import com.farias.rengine.render.RenderSystem;
@@ -17,7 +16,7 @@ import org.lwjgl.glfw.GLFW;
 
 class Main {
     public static void main(String[] args) {
-        Window window = new Window(640, 480);
+        Window window = new Window(1280, 960);
         long windowId = window.create();
         SpaceCruiser game = new SpaceCruiser("Space Cruiser", window);
         game.addSystem(new InputSystem(game, windowId));
@@ -28,11 +27,11 @@ class Main {
 }
 
 public class SpaceCruiser extends Game {
-    Player player;
-    Sprite enemy_spr;
-    float lastShot;
-    float fireRate = 1f / 60f * 10;
-    Set<Bullet> bullets = new HashSet<>(); 
+    private Player player;
+    private float lastShot;
+    private float fireRate = 1f / 60f * 10;
+    private Set<Bullet> bullets = new HashSet<>();
+    private EnemySystem enemySystem;
 
     public SpaceCruiser(String title, Window window) {
         super(title, window, true);
@@ -42,15 +41,27 @@ public class SpaceCruiser extends Game {
     public void onUserCreate() {
         orthographicMode(640, 480);
         player = new Player();
-        enemy_spr = createSprite("resources/spaceships/enemy/enemy_01.png", 0, 128, 128);
+        this.enemySystem = new EnemySystem(this);
     }
 
     @Override
     public void onUserUpdate(float deltaTime) {
-        player.moving = false;
-        checkInput();
-        player.update(deltaTime);
-        resolveGameState(deltaTime);
+        this.checkInput();
+        this.enemySystem.update(deltaTime);
+        //collisionSystem.update();
+        this.player.update(deltaTime);
+        this.resolveGameState(deltaTime);
+    }
+
+    @Override
+    public void onGfxUpdate(float deltaTime) {
+        drawSprite(player.sprite, player.animation.currentFrame, 64, 64, (int) player.position.x, (int) player.position.y,
+         (int) player.scale.x, (int) player.scale.y);
+        for (Bullet bullet : bullets) {
+            drawSprite(bullet.sprite, bullet.animation, 128, 128, (int) bullet.position.x, (int) bullet.position.y, (int) bullet.scale.x, (int) bullet.scale.y);
+        }
+        enemySystem.draw();
+        drawText("current sprite: " + player.animation.currentFrame, 340, -10, 8, 8);
     }
 
     private void checkInput() {
@@ -106,15 +117,5 @@ public class SpaceCruiser extends Game {
 
     public void createBullet() {
         bullets.add(new Bullet(new Vector2f(player.position.x + 16, player.position.y), 1));
-    }
-
-    @Override
-    public void onGfxUpdate(float deltaTime) {
-        drawSprite(player.sprite, player.animation.currentFrame, 64, 64, (int) player.position.x, (int) player.position.y,
-         (int) player.scale.x, (int) player.scale.y);
-        for (Bullet bullet : bullets) {
-            drawSprite(bullet.sprite, bullet.animation, 128, 128, (int) bullet.position.x, (int) bullet.position.y, (int) bullet.scale.x, (int) bullet.scale.y);
-        }
-        drawText("current sprite: " + player.animation.currentFrame, 340, -10, 8, 8);
-    }    
+    }  
 }
