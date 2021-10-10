@@ -4,7 +4,7 @@ import static com.farias.rengine.GameEngine.*;
 import com.farias.rengine.GameEngine.Sprite;
 import org.joml.Vector2f;
 
-public class Enemy {
+public class Enemy extends Spaceship {
     public enum EnemyType {
         ENEMY_01("resources/spaceships/enemy/enemy_01.png"),
         ENEMY_02("resources/spaceships/enemy/enemy_02.png"),
@@ -27,13 +27,6 @@ public class Enemy {
         30, 44, //turning right idle
     };
 
-    private Vector2f position;
-    private Vector2f scale;
-    private Vector2f rotation;
-    private Vector2f velocity;
-    private Sprite sprite;
-    private Animation animation;
-
     public Enemy(EnemyType type, float x, float y, float sx, float sy) {
         this.sprite = createSprite(type.sprite, 0, 128, 128);
         this.position = new Vector2f(x, y);
@@ -45,8 +38,9 @@ public class Enemy {
     }
 
     public void update(float deltaTime) {
-        animation.nextFrame(deltaTime);
+        
     }
+    
     public void shoot() {}
     public void turnLeft() {}
     public void turnRight() {}
