@@ -1,11 +1,8 @@
 package com.farias.games;
 
 import static com.farias.rengine.GameEngine.*;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.farias.games.Enemy.EnemyType;
-import com.farias.rengine.Game;
 import com.farias.rengine.System;
 
 public class EnemySystem extends System {
@@ -48,14 +45,14 @@ public class EnemySystem extends System {
         }
     }
 
-    public void draw() {
-        for (GameObject object : ((SpaceCruiser)game).getObjects()) {
-            if (object instanceof Enemy) {
-                Enemy enemy = (Enemy) object;
-                drawSprite(enemy.getSprite(), enemy.getAnimation().currentFrame, 128, 128, (int) enemy.getPosX(), (int) enemy.getPosY(), (int) enemy.getScale().x, (int) enemy.getScale().y);
-            }
-        }
-    }
+    // public void draw() {
+    //     for (GameObject object : ((SpaceCruiser)game).getObjects()) {
+    //         if (object instanceof Enemy) {
+    //             Enemy enemy = (Enemy) object;
+    //             drawSprite(enemy.getSprite(), enemy.getAnimation().currentFrame, 128, 128, (int) enemy.getPosX(), (int) enemy.getPosY(), (int) enemy.getScale().x, (int) enemy.getScale().y);
+    //         }
+    //     }
+    // }
 
     public void spawnEnemies(float deltaTime) {
         if(this.shouldSpawnEnemy(deltaTime)) {

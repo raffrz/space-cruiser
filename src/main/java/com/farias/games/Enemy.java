@@ -3,6 +3,7 @@ package com.farias.games;
 import static com.farias.rengine.GameEngine.*;
 import com.farias.rengine.GameEngine.Sprite;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 public class Enemy extends Spaceship {
     public enum EnemyType {
@@ -28,17 +29,18 @@ public class Enemy extends Spaceship {
     };
 
     public Enemy(EnemyType type, float x, float y, float sx, float sy) {
-        this.sprite = createSprite(type.sprite, 0, 128, 128);
         this.position = new Vector2f(x, y);
-        this.scale = new Vector2f(sx * -1, sy * -1);
-        this.rotation = new Vector2f();
+        this.scale = new Vector2f(sx, sy);
+        this.rotation = new Vector3f(0f, 0f, 180f);
         this.velocity = new Vector2f();
+        this.spriteSize = 128;
+        this.sprite = createSprite(type.sprite, 0, spriteSize, spriteSize);
         this.animation = new Animation(ENEMY_ANIMATION);
         this.animation.play(0);
     }
 
     public void update(float deltaTime) {
-        
+
     }
     
     public void shoot() {}
