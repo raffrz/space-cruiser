@@ -3,6 +3,7 @@ package com.farias.games;
 import static com.farias.rengine.GameEngine.*;
 
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
 
 import com.farias.rengine.Game;
@@ -16,7 +17,7 @@ import org.lwjgl.glfw.GLFW;
 
 class Main {
     public static void main(String[] args) {
-        Window window = new Window(1280, 960);
+        Window window = new Window(640, 480);
         long windowId = window.create();
         SpaceCruiser game = new SpaceCruiser("Space Cruiser", window);
         game.addSystem(new InputSystem(game, windowId));
@@ -28,9 +29,8 @@ class Main {
 
 public class SpaceCruiser extends Game {
     private Player player;
-    private float lastShot;
-    private float fireRate = 1f / 60f * 10;
-    private Set<GameObject> objects;
+    private Set<GameObject> gameObjects;
+    private Set<GameObject> gameObjectsToAdd;
 
     public SpaceCruiser(String title, Window window) {
         super(title, window, true);
@@ -39,28 +39,33 @@ public class SpaceCruiser extends Game {
     @Override
     public void onUserCreate() {
         orthographicMode(640, 480);
-        player = new Player();
         this.addSystem(new EnemySystem(this));
         this.addSystem(new AnimationSystem(this));
-        this.objects = new HashSet<>();
-        this.objects.add(player);
+        this.addSystem(new BulletSystem(this, 640, 0, 0, -480));
+        this.gameObjects = new HashSet<>();
+        this.gameObjectsToAdd = new HashSet<>();
+        this.player = new Player();
+        Gun playerDoubleCannon = new DoubleGun(this.player);
+        this.player.addGun(playerDoubleCannon);
+        this.gameObjects.add(player);
     }
 
     @Override
     public void onUserUpdate(float deltaTime) {
         this.checkInput();
-        for (GameObject g: objects) {
+        for (GameObject g: gameObjects) {
             g.update(deltaTime);
         }
-        this.resolveGameState(deltaTime);
+        this.gameObjects.addAll(gameObjectsToAdd);
+        this.gameObjectsToAdd.clear();
     }
 
     @Override
     public void onGfxUpdate(float deltaTime) {
-        for (GameObject g: objects) {
+        for (GameObject g: gameObjects) {
             g.draw();
         }
-        drawText("current sprite: " + player.animation.currentFrame, 340, -10, 8, 8);
+        drawText("hp: " + player.animation.currentFrame, 340, -10, 8, 8);
     }
 
     private void checkInput() {
@@ -92,28 +97,22 @@ public class SpaceCruiser extends Game {
             player.breaking = false;
         }
         if (getInput().isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
-            player.shooting = true;
+            player.onShoot();
         }
         if (getInput().isKeyReleased(GLFW.GLFW_KEY_SPACE)) {
-            player.shooting = false;
-        }
-    }
-
-    public void resolveGameState(float deltaTime) {
-        lastShot+=deltaTime;
-        if (player.shooting) {
-            if (lastShot > fireRate) {
-                createBullet();
-                lastShot = 0;
-            }
+            player.onStopShooting();
         }
     }
 
     public void createBullet() {
-        objects.add(new Bullet(new Vector2f(player.position.x + 16, player.position.y), 1));
+        this.gameObjects.add(new Bullet(new Vector2f(player.position.x + 16, player.position.y), 1));
     }
 
-    public Set<GameObject> getObjects() {
-        return objects;
+    public Set<GameObject> getGameObjects() {
+        return this.gameObjects;
+    }
+
+    public void addGameObject(GameObject gameObject) {
+        this.gameObjectsToAdd.add(gameObject);
     }
 }

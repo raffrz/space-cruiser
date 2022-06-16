@@ -2,15 +2,10 @@ package com.farias.games;
 
 import static com.farias.rengine.GameEngine.*;
 
-import com.farias.rengine.GameEngine.Sprite;
-
 import org.joml.Vector2f;
 
 class Bullet extends GameObject{
     private static final int BULLET_SCALE = 32;
-    Sprite sprite;
-    Vector2f position;
-    Vector2f scale;
     float speed;
     int animation;
 

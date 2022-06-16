@@ -20,7 +20,7 @@ public class EnemySystem extends System {
     @Override
     public void update(float deltaTime) {
         this.spawnEnemies(deltaTime);
-        for (GameObject object : ((SpaceCruiser)game).getObjects()) {
+        for (GameObject object : ((SpaceCruiser)game).getGameObjects()) {
             if (object instanceof Enemy) {
                 Enemy enemy = (Enemy) object;
                 if (enemy.getVelX() == 0)
@@ -73,18 +73,18 @@ public class EnemySystem extends System {
         // .withLevelBetween(1,3)
         // .atPosition()
         // .build();
-        ((SpaceCruiser)game).getObjects().add(enemy);
+        ((SpaceCruiser)game).getGameObjects().add(enemy);
         numberOfEnemies++;
     }
 
     float lastSpawn;
-    float spawnRate = 5;
+    float spawnRate = 1;
 
     public boolean shouldSpawnEnemy(float deltaTime) {
         lastSpawn+=deltaTime;
         if (lastSpawn < spawnRate)
             return false;
-        if (numberOfEnemies >= 10)
+        if (numberOfEnemies >= 200)
             return false;
         return true;
     }

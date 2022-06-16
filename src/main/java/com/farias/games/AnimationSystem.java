@@ -17,7 +17,7 @@ public class AnimationSystem extends System {
     @Override
     public void update(float deltaTime) {
         SpaceCruiser game = (SpaceCruiser) super.game;
-        for (GameObject gameObject : game.getObjects()) {
+        for (GameObject gameObject : game.getGameObjects()) {
             if (!gameObject.isAnimated())
                 continue;
             Animation a = gameObject.getAnimation();

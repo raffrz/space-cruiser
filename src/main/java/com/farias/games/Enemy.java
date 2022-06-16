@@ -43,7 +43,7 @@ public class Enemy extends Spaceship {
 
     }
     
-    public void shoot() {}
+    public void onShoot() {}
     public void turnLeft() {}
     public void turnRight() {}
     public void stop() {}
