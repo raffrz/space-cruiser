@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Spaceship extends GameObject {
+    int maxHealth = 100;
+    int health = 100;
     boolean moving;
     boolean accelerating;
     boolean breaking;

@@ -3,7 +3,6 @@ package com.farias.games;
 import static com.farias.rengine.GameEngine.*;
 
 import java.util.HashSet;
-import java.util.Queue;
 import java.util.Set;
 
 import com.farias.rengine.Game;
@@ -12,17 +11,15 @@ import com.farias.rengine.io.InputSystem;
 import com.farias.rengine.io.Window;
 import com.farias.rengine.render.RenderSystem;
 
-import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 class Main {
     public static void main(String[] args) {
-        Window window = new Window(640, 480);
+        Window window = new Window(1280, 960);
         long windowId = window.create();
         SpaceCruiser game = new SpaceCruiser("Space Cruiser", window);
         game.addSystem(new InputSystem(game, windowId));
-        game.addSystem(new RenderSystem(game) {
-        });
+        game.addSystem(RenderSystem.renderSystem2D(game));
         GameEngine.initGame(game);
     }
 }
@@ -33,7 +30,7 @@ public class SpaceCruiser extends Game {
     private Set<GameObject> gameObjectsToAdd;
 
     public SpaceCruiser(String title, Window window) {
-        super(title, window, true);
+        super(title, window, false);
     }
 
     @Override
@@ -41,7 +38,7 @@ public class SpaceCruiser extends Game {
         orthographicMode(640, 480);
         this.addSystem(new EnemySystem(this));
         this.addSystem(new AnimationSystem(this));
-        this.addSystem(new BulletSystem(this, 640, 0, 0, -480));
+        this.addSystem(new BulletSystem(this, 640, 0, -480, 0));
         this.gameObjects = new HashSet<>();
         this.gameObjectsToAdd = new HashSet<>();
         this.player = new Player();
@@ -65,7 +62,7 @@ public class SpaceCruiser extends Game {
         for (GameObject g: gameObjects) {
             g.draw();
         }
-        drawText("hp: " + player.animation.currentFrame, 340, -10, 8, 8);
+        drawText("hp: " + player.health, 340, -10, 8, 8);
     }
 
     private void checkInput() {
@@ -102,10 +99,6 @@ public class SpaceCruiser extends Game {
         if (getInput().isKeyReleased(GLFW.GLFW_KEY_SPACE)) {
             player.onStopShooting();
         }
-    }
-
-    public void createBullet() {
-        this.gameObjects.add(new Bullet(new Vector2f(player.position.x + 16, player.position.y), 1));
     }
 
     public Set<GameObject> getGameObjects() {

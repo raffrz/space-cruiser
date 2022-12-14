@@ -37,7 +37,7 @@ public class BulletSystem extends System {
     }
 
     private boolean isInsideBulletBox(GameObject bullet) {
-        return bullet.position.x > leftEdge && bullet.position.x < rightEdge && bullet.position.y < topEdge
-                && bullet.position.y > bottomEdge;
+        return bullet.position.x > leftEdge && bullet.position.x < rightEdge && bullet.position.y > topEdge
+                && bullet.position.y < bottomEdge;
     }
 }
